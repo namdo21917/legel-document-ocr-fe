@@ -30,10 +30,12 @@ const defaultDocumentData: DocumentData = {
 
 export default function OCRPage() {
   const [documentData, setDocumentData] = useState<DocumentData>(defaultDocumentData)
+  const [processedDocuments, setProcessedDocuments] = useState<DocumentData[]>([])
 
   const handleFileUpload = async (file: File) => {
     try {
       const data = await uploadDocument(file)
+      setProcessedDocuments(prevDocs => [...prevDocs, data])
       setDocumentData(data)
     } catch (error) {
       console.error('Error uploading document:', error)
@@ -43,16 +45,31 @@ export default function OCRPage() {
   const handleSave = async (data: DocumentData) => {
     try {
       await saveDocument(data)
+      // Update the processed documents list with the saved data
+      setProcessedDocuments(prevDocs =>
+          prevDocs.map(doc =>
+              doc.metadata.document_id === data.metadata.document_id ? data : doc
+          )
+      )
     } catch (error) {
       console.error('Error saving document:', error)
     }
   }
 
+  const handleSelectDocument = (selectedDoc: DocumentData) => {
+    setDocumentData(selectedDoc)
+  }
+
   return (
-    <div className="grid grid-cols-2 gap-4">
-      <DocumentViewer onFileUpload={handleFileUpload} />
-      <OCREditor data={documentData} onSave={handleSave} />
-    </div>
+      <div className="grid grid-cols-2 gap-4">
+        <DocumentViewer onFileUpload={handleFileUpload} />
+        <OCREditor
+            data={documentData}
+            processedDocuments={processedDocuments}
+            onSave={handleSave}
+            onSelectDocument={handleSelectDocument}
+        />
+      </div>
   )
 }
 
