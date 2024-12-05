@@ -6,6 +6,7 @@ import { Card } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Upload } from 'lucide-react'
+import {uploadDocument} from "@/services/api";
 
 interface DocumentViewerProps {
   onFileUpload: (file: File) => void
@@ -21,6 +22,7 @@ export function DocumentViewer({ onFileUpload }: DocumentViewerProps) {
       setSelectedFile(file)
       setSelectedFileName(file.name)
       onFileUpload(file)
+      uploadDocument(file)
     }
   }
 
@@ -66,7 +68,6 @@ export function DocumentViewer({ onFileUpload }: DocumentViewerProps) {
   return (
       <Card className="p-4">
         <div className="mb-4">
-          <Label htmlFor="file-upload">Upload Document</Label>
           <div className="mt-2">
             <Button
                 asChild
@@ -83,6 +84,7 @@ export function DocumentViewer({ onFileUpload }: DocumentViewerProps) {
                 Choose file
               </label>
             </Button>
+            &nbsp;
             {selectedFileName && (
                 <span className="text-sm text-muted-foreground">{selectedFileName}</span>
             )}

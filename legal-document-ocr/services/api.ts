@@ -1,3 +1,5 @@
+import {DocumentData, DocumentListParams} from "@/types/document";
+
 export async function uploadDocument(file: File) {
   const formData = new FormData();
   formData.append('file', file);
