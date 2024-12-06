@@ -35,8 +35,8 @@ export default function OCRPage() {
   const handleFileUpload = async (file: File) => {
     try {
       const data = await uploadDocument(file)
-      setProcessedDocuments(prevDocs => [...prevDocs, data])
-      setDocumentData(data)
+      setProcessedDocuments(prevDocs => [...prevDocs, data as DocumentData])
+      setDocumentData(data as DocumentData)
     } catch (error) {
       console.error('Error uploading document:', error)
     }

@@ -45,10 +45,10 @@ export function OCREditor({ data, processedDocuments, onSave, onSelectDocument }
             </TableHeader>
             <TableBody>
               {processedDocuments.map((doc) => (
-                  <TableRow key={doc.metadata.document_id}>
-                    <TableCell>{doc.document_info.document_type}</TableCell>
-                    <TableCell>{doc.document_info.document_number}</TableCell>
-                    <TableCell>{doc.document_info.issue_date}</TableCell>
+                  <TableRow key={doc.metadata?.document_id}>
+                    <TableCell>{doc.document_info?.document_type}</TableCell>
+                    <TableCell>{doc.document_info?.document_number}</TableCell>
+                    <TableCell>{doc.document_info?.issue_date}</TableCell>
                     <TableCell>
                       <Button variant="link" onClick={() => onSelectDocument(doc)}>
                         Select
