@@ -72,7 +72,7 @@ export function OCREditor({ data, processedDocuments, onSave, onSelectDocument }
                   <Label htmlFor="document_type">Document Type</Label>
                   <Input
                       id="document_type"
-                      value={documentData.document_info.document_type}
+                      value={documentData.document_info?.document_type}
                       onChange={e => handleChange('document_type', e.target.value)}
                   />
                 </div>
@@ -80,7 +80,7 @@ export function OCREditor({ data, processedDocuments, onSave, onSelectDocument }
                   <Label htmlFor="document_number">Document Number</Label>
                   <Input
                       id="document_number"
-                      value={documentData.document_info.document_number}
+                      value={documentData.document_info?.document_number}
                       onChange={e => handleChange('document_number', e.target.value)}
                   />
                 </div>
@@ -90,7 +90,7 @@ export function OCREditor({ data, processedDocuments, onSave, onSelectDocument }
                   <Label htmlFor="issue_location">Issue Location</Label>
                   <Input
                       id="issue_location"
-                      value={documentData.document_info.issue_location}
+                      value={documentData.document_info?.issue_location}
                       onChange={e => handleChange('issue_location', e.target.value)}
                   />
                 </div>
@@ -98,7 +98,7 @@ export function OCREditor({ data, processedDocuments, onSave, onSelectDocument }
                   <Label htmlFor="issue_date">Issue Date</Label>
                   <Input
                       id="issue_date"
-                      value={documentData.document_info.issue_date}
+                      value={documentData.document_info?.issue_date}
                       onChange={e => handleChange('issue_date', e.target.value)}
                   />
                 </div>
@@ -107,7 +107,7 @@ export function OCREditor({ data, processedDocuments, onSave, onSelectDocument }
                 <Label htmlFor="content">Content</Label>
                 <Textarea
                     id="content"
-                    value={documentData.document_info.content}
+                    value={documentData.document_info?.content}
                     onChange={e => handleChange('content', e.target.value)}
                     className="min-h-[200px]"
                 />
@@ -116,7 +116,7 @@ export function OCREditor({ data, processedDocuments, onSave, onSelectDocument }
           </TabsContent>
           <TabsContent value="full-text">
             <Textarea
-                value={documentData.document_info.content}
+                value={documentData.document_info?.content}
                 onChange={e => handleChange('content', e.target.value)}
                 className="min-h-[400px]"
             />

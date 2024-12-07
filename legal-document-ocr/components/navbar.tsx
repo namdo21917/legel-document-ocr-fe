@@ -13,12 +13,6 @@ export function Navbar() {
           <Link href="/ocr">OCR</Link>
           <Link href="/documents">Documents</Link>
         </div>
-        <div className="ml-auto">
-          <Button>
-            <Upload className="mr-2 h-4 w-4" />
-            Upload File
-          </Button>
-        </div>
       </div>
     </nav>
   )
