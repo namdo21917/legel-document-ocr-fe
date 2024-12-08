@@ -3,7 +3,7 @@
 import { useState } from "react"
 import { DocumentViewer } from "@/components/document-viewer"
 import { OCREditor } from "@/components/ocr-editor"
-import { uploadDocument, saveDocument } from "@/services/api"
+import { documentService } from "@/services/document-service"
 import type { DocumentData } from "@/types/document"
 
 const defaultDocumentData: DocumentData = {
@@ -31,45 +31,55 @@ const defaultDocumentData: DocumentData = {
 export default function OCRPage() {
   const [documentData, setDocumentData] = useState<DocumentData>(defaultDocumentData)
   const [processedDocuments, setProcessedDocuments] = useState<DocumentData[]>([])
+  const [isLoading, setIsLoading] = useState(false)
 
   const handleFileUpload = async (file: File) => {
     try {
-      const data = await uploadDocument(file)
-      setProcessedDocuments(prevDocs => [...prevDocs, data as DocumentData])
-      setDocumentData(data as DocumentData)
+      setIsLoading(true)
+      const documents = await documentService.uploadDocument(file)
+      setProcessedDocuments(documents)
+      if (documents.length > 0) {
+        setDocumentData(documents[0])
+      }
+
     } catch (error) {
-      console.error('Error uploading document:', error)
+      console.log(error)
+    } finally {
+      setIsLoading(false)
     }
   }
 
   const handleSave = async (data: DocumentData) => {
     try {
-      await saveDocument(data)
-      // Update the processed documents list with the saved data
+      setIsLoading(true)
+      const savedDocument = await documentService.saveDocument(data)
       setProcessedDocuments(prevDocs =>
-          prevDocs.map(doc =>
-              doc.metadata.document_id === data.metadata.document_id ? data : doc
-          )
+        prevDocs.map(doc =>
+          doc.metadata.document_id === savedDocument.metadata.document_id 
+            ? savedDocument 
+            : doc
+        )
       )
+
     } catch (error) {
-      console.error('Error saving document:', error)
+       console.log('error');
+
+    } finally {
+      setIsLoading(false)
     }
   }
 
-  const handleSelectDocument = (selectedDoc: DocumentData) => {
-    setDocumentData(selectedDoc)
-  }
-
   return (
-      <div className="grid grid-cols-2 gap-4">
-        <DocumentViewer onFileUpload={handleFileUpload} />
-        <OCREditor
-            data={documentData}
-            processedDocuments={processedDocuments}
-            onSave={handleSave}
-            onSelectDocument={handleSelectDocument}
-        />
-      </div>
+    <div className="grid grid-cols-2 gap-4 h-[calc(100vh-2rem)] p-4">
+      <DocumentViewer onFileUpload={handleFileUpload} isLoading={isLoading} />
+      <OCREditor
+        data={documentData}
+        processedDocuments={processedDocuments}
+        onSave={handleSave}
+        onSelectDocument={setDocumentData}
+        isLoading={isLoading}
+      />
+    </div>
   )
 }
 

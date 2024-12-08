@@ -6,13 +6,14 @@ import { Card } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Upload } from 'lucide-react'
-import {uploadDocument} from "@/services/api";
+import {documentService} from "@/services/document-service";
 
 interface DocumentViewerProps {
   onFileUpload: (file: File) => void
+  isLoading: boolean
 }
 
-export function DocumentViewer({ onFileUpload }: DocumentViewerProps) {
+export function DocumentViewer({ onFileUpload, isLoading }: DocumentViewerProps) {
   const [selectedFile, setSelectedFile] = useState<File | null>(null)
   const [selectedFileName, setSelectedFileName] = useState<string | null>(null);
 
@@ -22,7 +23,7 @@ export function DocumentViewer({ onFileUpload }: DocumentViewerProps) {
       setSelectedFile(file)
       setSelectedFileName(file.name)
       onFileUpload(file)
-      uploadDocument(file)
+      documentService.uploadDocument(file)
     }
   }
 
