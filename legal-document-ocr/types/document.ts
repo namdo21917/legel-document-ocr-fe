@@ -31,20 +31,6 @@ export interface DocumentListParams {
 }
 
 export interface DocumentResponse {
-    id?: string;
-    extraction_time?: string;
-    version?: string;
-    document_type?: string;
-    document_number?: string;
-    issue_location?: string;
-    issue_date?: string;
-    issuing_agency?: string | null;
-    recipients?: string;
-    recipient_address?: string;
-    signer?: string | null;
-    position?: string | null;
-    subject?: string;
-    content?: string;
-    page_numbers?: number[];
+    documents: DocumentData[];
 }
 

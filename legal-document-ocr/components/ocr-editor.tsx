@@ -9,6 +9,7 @@ import {Textarea} from "@/components/ui/textarea"
 import {Tabs, TabsContent, TabsList, TabsTrigger} from "@/components/ui/tabs"
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table"
 import type {DocumentData} from "@/types/document"
+import {CircleCheckBig, Icon, icons} from "lucide-react";
 
 interface OCREditorProps {
     data: DocumentData
@@ -59,19 +60,15 @@ export function OCREditor({
                             {processedDocuments.map((doc) => (
                                 <TableRow
                                     key={doc.metadata.document_id}
-                                    className={doc.metadata.document_id === documentData.metadata.document_id ? 'bg-muted' : ''}
+                                    className={doc.metadata.document_id === documentData.metadata.document_id ? 'font-bold' : ''}
+                                    onClick={() => onSelectDocument(doc)}
                                 >
                                     <TableCell>{doc.document_info.document_type}</TableCell>
                                     <TableCell>{doc.document_info.document_number}</TableCell>
                                     <TableCell>{doc.document_info.subject}</TableCell>
                                     <TableCell>
-                                        <Button
-                                            variant="link"
-                                            onClick={() => onSelectDocument(doc)}
-                                            disabled={isLoading}
-                                        >
-                                            Select
-                                        </Button>
+                                        {doc.metadata.document_id === documentData.metadata.document_id ?
+                                            <CircleCheckBig/> : <></>}
                                     </TableCell>
                                 </TableRow>
                             ))}

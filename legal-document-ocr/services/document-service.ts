@@ -1,70 +1,74 @@
-import { httpClient } from '@/lib/http-client';
-import { DocumentData, DocumentListParams, DocumentResponse } from '@/types/document';
+import {httpClient} from '@/lib/http-client';
+import {DocumentData, DocumentListParams, DocumentResponse} from '@/types/document';
 
 export class DocumentService {
-  private static instance: DocumentService;
-  
-  private constructor() {}
-  
-  public static getInstance(): DocumentService {
-    if (!DocumentService.instance) {
-      DocumentService.instance = new DocumentService();
+    private static instance: DocumentService;
+
+    private constructor() {
     }
-    return DocumentService.instance;
-  }
 
-  public async uploadDocument(file: File): Promise<DocumentData[]> {
-    const formData = new FormData();
-    formData.append('file', file);
+    public static getInstance(): DocumentService {
+        if (!DocumentService.instance) {
+            DocumentService.instance = new DocumentService();
+        }
+        return DocumentService.instance;
+    }
 
-    const response = await httpClient.post<DocumentResponse | DocumentResponse[]>('/documents/', formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-    });
+    public async uploadDocument(file: File): Promise<DocumentData[]> {
+        const formData = new FormData();
+        formData.append('file', file);
 
-    return this.mapDocumentResponse(response);
-  }
+        const response = await httpClient.post<DocumentResponse>('/documents/', formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+            },
+        });
+        console.log("docs", response)
+        console.log("mapped :", this.mapDocumentResponse(response));
+        return this.mapDocumentResponse(response);
 
-  public async getDocuments(params: DocumentListParams): Promise<DocumentData[]> {
-    const response = await httpClient.get<DocumentResponse | DocumentResponse[]>('/documents/', {
-      params,
-    });
+    }
 
-    return this.mapDocumentResponse(response);
-  }
+    public async getDocuments(params: DocumentListParams): Promise<DocumentData[]> {
+        const response = await httpClient.get<DocumentResponse>('/documents/', {
+            params,
+        });
 
-  public async saveDocument(data: DocumentData): Promise<DocumentData> {
-    const response = await httpClient.post<DocumentResponse>('/documents/save', data);
-    const mappedResponse = this.mapDocumentResponse(response);
-    return mappedResponse[0];
-  }
+        return this.mapDocumentResponse(response);
+    }
 
-  private mapDocumentResponse(response: DocumentResponse | DocumentResponse[]): DocumentData[] {
-    const documents = Array.isArray(response) ? response : [response];
-    
-    return documents.map(doc => ({
-      metadata: {
-        document_id: doc.id || '',
-        extraction_time: doc.extraction_time || new Date().toISOString(),
-        version: doc.version || '1.0',
-      },
-      document_info: {
-        document_type: doc.document_type || '',
-        document_number: doc.document_number || '',
-        issue_location: doc.issue_location || '',
-        issue_date: doc.issue_date || '',
-        issuing_agency: doc.issuing_agency || null,
-        recipients: doc.recipients || '',
-        recipient_address: doc.recipient_address || '',
-        signer: doc.signer || null,
-        position: doc.position || null,
-        subject: doc.subject || '',
-        content: doc.content || '',
-        page_numbers: doc.page_numbers || [],
-      },
-    }));
-  }
+    // public async saveDocument(data: DocumentData): Promise<DocumentData> {
+    //     const response = await httpClient.post<DocumentResponse>('/documents/save', data);
+    //     const mappedResponse = this.mapDocumentResponse(response);
+    //     return mappedResponse[0];
+    // }
+
+    private mapDocumentResponse(response: DocumentResponse): DocumentData[] {
+        const documents = response;
+        console.log("in map function: ", documents)
+        return response.documents.map(doc => ({
+            metadata: {
+                document_id: doc.metadata.document_id || '',
+                extraction_time: doc.metadata.extraction_time || new Date().toISOString(),
+                version: doc.metadata.version || '1.0',
+            },
+            document_info: {
+                document_type: doc.document_info.document_type || '',
+                document_number: doc.document_info.document_number || '',
+                issue_location: doc.document_info.issue_location || '',
+                issue_date: doc.document_info.issue_date || '',
+                issuing_agency: doc.document_info.issuing_agency || '',
+                recipients: doc.document_info.recipients || '',
+                recipient_address: doc.document_info.recipient_address || '',
+                signer: doc.document_info.signer || '',
+                position: doc.document_info.position || '',
+                subject: doc.document_info.subject || '',
+                content: doc.document_info.content || '',
+                page_numbers: doc.document_info.page_numbers || [],
+            },
+        }))
+
+    }
 }
 
-export const documentService = DocumentService.getInstance(); 
+export const documentService = DocumentService.getInstance();

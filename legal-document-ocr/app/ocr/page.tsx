@@ -17,11 +17,11 @@ const defaultDocumentData: DocumentData = {
     document_number: "",
     issue_location: "",
     issue_date: "",
-    issuing_agency: null,
+    issuing_agency: '',
     recipients: "",
     recipient_address: "",
-    signer: null,
-    position: null,
+    signer: '',
+    position: '',
     subject: "",
     content: "",
     page_numbers: []
@@ -71,7 +71,7 @@ export default function OCRPage() {
 
   return (
     <div className="grid grid-cols-2 gap-4 h-[calc(100vh-2rem)] p-4">
-      <DocumentViewer onFileUpload={handleFileUpload} isLoading={isLoading} />
+      <DocumentViewer onFileUpload={handleFileUpload} isLoading={isLoading} setProcessedDocuments={setProcessedDocuments} />
       <OCREditor
         data={documentData}
         processedDocuments={processedDocuments}
