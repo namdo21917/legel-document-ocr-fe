@@ -1,6 +1,4 @@
 import Link from "next/link"
-import { Button } from "@/components/ui/button"
-import { Upload } from 'lucide-react'
 
 export function Navbar() {
   return (

@@ -1,0 +1,18 @@
+version: '3.8'
+
+services:
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: legal-document-ocr-frontend
+    ports:
+      - "3000:3000"
+    environment:
+      - NEXT_PUBLIC_API_URL=http://ocr_api:8000
+    networks:
+      - ocr_network
+
+networks:
+  ocr_network:
+    external: true 

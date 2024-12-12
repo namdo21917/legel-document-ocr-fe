@@ -37,11 +37,11 @@ export class DocumentService {
         return this.mapDocumentResponse(response);
     }
 
-    // public async saveDocument(data: DocumentData): Promise<DocumentData> {
-    //     const response = await httpClient.post<DocumentResponse>('/documents/save', data);
-    //     const mappedResponse = this.mapDocumentResponse(response);
-    //     return mappedResponse[0];
-    // }
+    public async saveDocument(data: DocumentData): Promise<DocumentData> {
+        const response = await httpClient.post<DocumentResponse>('/documents/save', data);
+        const mappedResponse = this.mapDocumentResponse(response);
+        return mappedResponse[0];
+    }
 
     private mapDocumentResponse(response: DocumentResponse): DocumentData[] {
         const documents = response;

@@ -9,7 +9,7 @@ import {Textarea} from "@/components/ui/textarea"
 import {Tabs, TabsContent, TabsList, TabsTrigger} from "@/components/ui/tabs"
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table"
 import type {DocumentData} from "@/types/document"
-import {CircleCheckBig, Icon, icons} from "lucide-react";
+import {CircleCheckBig} from "lucide-react";
 
 interface OCREditorProps {
     data: DocumentData

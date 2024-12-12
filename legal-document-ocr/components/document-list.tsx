@@ -1,11 +1,11 @@
 'use client'
 
-import { useState, useEffect } from 'react'
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+import {useEffect, useState} from 'react'
+import {Button} from "@/components/ui/button"
+import {Card, CardContent, CardHeader, CardTitle} from "@/components/ui/card"
+import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table"
+import type {DocumentData} from "@/types/document"
 import {documentService} from "@/services/document-service";
-import type { DocumentData } from "@/types/document"
 
 export function DocumentList() {
   const [documents, setDocuments] = useState<DocumentData[]>([])
@@ -13,22 +13,22 @@ export function DocumentList() {
   const [totalPages, setTotalPages] = useState(1)
   const limit = 10
 
-  // useEffect(() => {
-  //   fetchDocuments()
-  // }, [currentPage])
+  useEffect(() => {
+    fetchDocuments()
+  }, [currentPage])
 
-  // const fetchDocuments = async () => {
-  //   try {
-  //     const response = await documentService.getDocuments({
-  //       skip: (currentPage - 1) * limit,
-  //       limit: limit,
-  //     })
-  //     setDocuments(response.documents)
-  //     setTotalPages(Math.ceil(response.total / limit))
-  //   } catch (error) {
-  //     console.error('Error fetching documents:', error)
-  //   }
-  // }
+  const fetchDocuments = async () => {
+    try {
+      const response = await documentService.getDocuments({
+        skip: (currentPage - 1) * limit,
+        limit: limit,
+      })
+      setDocuments(response)
+      setTotalPages(Math.ceil(response.length / limit))
+    } catch (error) {
+      console.error('Error fetching documents:', error)
+    }
+  }
 
   return (
     <Card>

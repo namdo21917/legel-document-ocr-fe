@@ -4,7 +4,6 @@ import {useState} from "react"
 import {Button} from "@/components/ui/button"
 import {Card} from "@/components/ui/card"
 import {Input} from "@/components/ui/input"
-import {Label} from "@/components/ui/label"
 import {Upload} from 'lucide-react'
 import {documentService} from "@/services/document-service";
 import {DocumentData} from "@/types/document";
@@ -15,7 +14,7 @@ interface DocumentViewerProps {
     setProcessedDocuments: (processedDocuments: DocumentData[]) => void
 }
 
-export function DocumentViewer({onFileUpload, isLoading}: DocumentViewerProps) {
+export function DocumentViewer({onFileUpload}: DocumentViewerProps) {
     const [selectedFile, setSelectedFile] = useState<File | null>(null)
     const [selectedFileName, setSelectedFileName] = useState<string | null>(null);
 
