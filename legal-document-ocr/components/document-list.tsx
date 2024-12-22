@@ -31,18 +31,13 @@ export function DocumentList() {
   }
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Danh sách văn bản</CardTitle>
-      </CardHeader>
-      <CardContent>
+   <div>
         {isLoading ? (
           <div className="flex justify-center items-center h-24">Đang tải...</div>
         ) : (
           <DataTable columns={columns} data={documents} />
         )}
-      </CardContent>
-    </Card>
+   </div>
   )
 }
 
