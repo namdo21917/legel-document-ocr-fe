@@ -14,7 +14,7 @@ import {CircleCheckBig} from "lucide-react";
 interface OCREditorProps {
     data: DocumentData
     processedDocuments: DocumentData[]
-    onSave: (data: DocumentData) => void
+    onSave: (data: DocumentData[]) => void
     onSelectDocument: (document: DocumentData) => void
     isLoading: boolean
 }
@@ -26,22 +26,40 @@ export function OCREditor({
                               onSelectDocument,
                               isLoading
                           }: OCREditorProps) {
-    const [documentData, setDocumentData] = useState<DocumentData>(data)
+    const [editedDocuments, setEditedDocuments] = useState<DocumentData[]>(processedDocuments);
+    const [selectedDocument, setSelectedDocument] = useState<DocumentData>(data);
 
     useEffect(() => {
-        setDocumentData(data)
-    }, [data])
+        setEditedDocuments(processedDocuments);
+        setSelectedDocument(data);
+    }, [data, processedDocuments]);
 
     const handleChange = (field: string, value: string) => {
-        setDocumentData(prev => ({
-            ...prev,
+        const updatedDocument = {
+            ...selectedDocument,
             document_info: {
-                ...prev.document_info,
+                ...selectedDocument.document_info,
                 [field]: value
             }
-        }))
+        };
+        setSelectedDocument(updatedDocument);
+
+        setEditedDocuments(prev => prev.map(doc => 
+            doc.metadata.document_id === updatedDocument.metadata.document_id 
+                ? updatedDocument 
+                : doc
+        ));
     }
-    console.log(processedDocuments);
+
+    const handleSelectDocument = (doc: DocumentData) => {
+        setSelectedDocument(doc);
+        onSelectDocument(doc);
+    }
+
+    const handleSaveAll = () => {
+        onSave(editedDocuments);
+    }
+
     return (
         <Card className="h-full flex flex-col">
             <div className="p-4 border-b">
@@ -57,17 +75,17 @@ export function OCREditor({
                             </TableRow>
                         </TableHeader>
                         <TableBody>
-                            {processedDocuments.map((doc) => (
+                            {editedDocuments.map((doc) => (
                                 <TableRow
                                     key={doc.metadata.document_id}
-                                    className={doc.metadata.document_id === documentData.metadata.document_id ? 'font-bold' : ''}
-                                    onClick={() => onSelectDocument(doc)}
+                                    className={doc.metadata.document_id === selectedDocument.metadata.document_id ? 'font-bold' : ''}
+                                    onClick={() => handleSelectDocument(doc)}
                                 >
                                     <TableCell>{doc.document_info.document_type}</TableCell>
                                     <TableCell>{doc.document_info.document_number}</TableCell>
                                     <TableCell>{doc.document_info.subject}</TableCell>
                                     <TableCell>
-                                        {doc.metadata.document_id === documentData.metadata.document_id ?
+                                        {doc.metadata.document_id === selectedDocument.metadata.document_id ?
                                             <CircleCheckBig/> : <></>}
                                     </TableCell>
                                 </TableRow>
@@ -90,7 +108,7 @@ export function OCREditor({
                                     <Label htmlFor="document_type">Loại văn bản</Label>
                                     <Input
                                         id="document_type"
-                                        value={documentData.document_info.document_type}
+                                        value={selectedDocument.document_info.document_type}
                                         onChange={e => handleChange('document_type', e.target.value)}
                                         disabled={isLoading}
                                     />
@@ -99,7 +117,7 @@ export function OCREditor({
                                     <Label htmlFor="document_number">Số văn bản</Label>
                                     <Input
                                         id="document_number"
-                                        value={documentData.document_info.document_number}
+                                        value={selectedDocument.document_info.document_number}
                                         onChange={e => handleChange('document_number', e.target.value)}
                                         disabled={isLoading}
                                     />
@@ -110,7 +128,7 @@ export function OCREditor({
                                     <Label htmlFor="issue_location">Nơi ban hành</Label>
                                     <Input
                                         id="issue_location"
-                                        value={documentData.document_info.issue_location}
+                                        value={selectedDocument.document_info.issue_location}
                                         onChange={e => handleChange('issue_location', e.target.value)}
                                         disabled={isLoading}
                                     />
@@ -119,7 +137,7 @@ export function OCREditor({
                                     <Label htmlFor="issue_date">Ngày ban hành</Label>
                                     <Input
                                         id="issue_date"
-                                        value={documentData.document_info.issue_date}
+                                        value={selectedDocument.document_info.issue_date}
                                         onChange={e => handleChange('issue_date', e.target.value)}
                                         disabled={isLoading}
                                     />
@@ -130,7 +148,7 @@ export function OCREditor({
                                     <Label htmlFor="recipients">Người nhận</Label>
                                     <Input
                                         id="recipients"
-                                        value={documentData.document_info.recipients}
+                                        value={selectedDocument.document_info.recipients}
                                         onChange={e => handleChange('recipients', e.target.value)}
                                         disabled={isLoading}
                                     />
@@ -139,7 +157,7 @@ export function OCREditor({
                                     <Label htmlFor="recipient_address">Nơi nhận</Label>
                                     <Input
                                         id="recipient_address"
-                                        value={documentData.document_info.recipient_address}
+                                        value={selectedDocument.document_info.recipient_address}
                                         onChange={e => handleChange('recipient_address', e.target.value)}
                                         disabled={isLoading}
                                     />
@@ -149,7 +167,7 @@ export function OCREditor({
                                 <Label htmlFor="issuing_agency">Phòng/Ban ban hành</Label>
                                 <Input
                                     id="issuing_agency"
-                                    value={documentData.document_info.issuing_agency}
+                                    value={selectedDocument.document_info.issuing_agency}
                                     onChange={e => handleChange('issuing_agency', e.target.value)}
                                     disabled={isLoading}
                                 />
@@ -160,7 +178,7 @@ export function OCREditor({
                                     <Label htmlFor="signer">Người ký</Label>
                                     <Input
                                         id="signer"
-                                        value={documentData.document_info.recipients}
+                                        value={selectedDocument.document_info.signer}
                                         onChange={e => handleChange('signer', e.target.value)}
                                         disabled={isLoading}
                                     />
@@ -169,7 +187,7 @@ export function OCREditor({
                                     <Label htmlFor="position">Vị trí</Label>
                                     <Input
                                         id="position"
-                                        value={documentData.document_info.position}
+                                        value={selectedDocument.document_info.position}
                                         onChange={e => handleChange('position', e.target.value)}
                                         disabled={isLoading}
                                     />
@@ -178,7 +196,7 @@ export function OCREditor({
                                     <Label htmlFor="page_numbers">Ở trang</Label>
                                     <Input
                                         id="page_numbers"
-                                        value={documentData.document_info.page_numbers.map(number => number.toString())}
+                                        value={selectedDocument.document_info.page_numbers.map(number => number.toString())}
                                         onChange={e => handleChange('page_numbers', e.target.value)}
                                         disabled={isLoading}
                                     />
@@ -188,7 +206,7 @@ export function OCREditor({
                                 <Label htmlFor="subject">Chủ đề</Label>
                                 <Input
                                     id="subject"
-                                    value={documentData.document_info.subject}
+                                    value={selectedDocument.document_info.subject}
                                     onChange={e => handleChange('subject', e.target.value)}
                                     disabled={isLoading}
                                 />
@@ -199,7 +217,7 @@ export function OCREditor({
                                 <Label htmlFor="content">Nội dung</Label>
                                 <Textarea
                                     id="content"
-                                    value={documentData.document_info.content}
+                                    value={selectedDocument.document_info.content}
                                     onChange={e => handleChange('content', e.target.value)}
                                     className="min-h-[200px]"
                                     disabled={isLoading}
@@ -209,7 +227,7 @@ export function OCREditor({
                     </TabsContent>
                     <TabsContent value="full-text">
                         <Textarea
-                            value={documentData.document_info.content}
+                            value={selectedDocument.document_info.content}
                             onChange={e => handleChange('content', e.target.value)}
                             className="min-h-[400px]"
                             disabled={isLoading}
@@ -218,10 +236,10 @@ export function OCREditor({
                 </Tabs>
                 <Button
                     className="mt-4"
-                    onClick={() => onSave(documentData)}
+                    onClick={handleSaveAll}
                     disabled={isLoading}
                 >
-                    {isLoading ? 'Saving...' : 'Save'}
+                    {isLoading ? 'Saving...' : 'Save All Documents'}
                 </Button>
             </div>
         </Card>

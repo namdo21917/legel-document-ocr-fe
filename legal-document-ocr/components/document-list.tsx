@@ -1,78 +1,46 @@
 'use client'
 
-import {useEffect, useState} from 'react'
-import {Button} from "@/components/ui/button"
-import {Card, CardContent, CardHeader, CardTitle} from "@/components/ui/card"
-import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table"
-import type {DocumentData} from "@/types/document"
-import {documentService} from "@/services/document-service";
+import { useEffect, useState } from 'react'
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import type { DocumentData } from "@/types/document"
+import { documentService } from "@/services/document-service"
+import { columns } from "./documents/columns"
+import { DataTable } from "./documents/data-table"
 
 export function DocumentList() {
   const [documents, setDocuments] = useState<DocumentData[]>([])
-  const [currentPage, setCurrentPage] = useState(1)
-  const [totalPages, setTotalPages] = useState(1)
-  const limit = 10
+  const [isLoading, setIsLoading] = useState(false)
 
   useEffect(() => {
     fetchDocuments()
-  }, [currentPage])
+  }, [])
 
   const fetchDocuments = async () => {
     try {
+      setIsLoading(true)
       const response = await documentService.getDocuments({
-        skip: (currentPage - 1) * limit,
-        limit: limit,
+        skip: 0,
+        limit: 100, // Có thể điều chỉnh limit tùy nhu cầu
       })
       setDocuments(response)
-      setTotalPages(Math.ceil(response.length / limit))
     } catch (error) {
       console.error('Error fetching documents:', error)
+    } finally {
+      setIsLoading(false)
     }
   }
 
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Documents</CardTitle>
+        <CardTitle>Danh sách văn bản</CardTitle>
       </CardHeader>
       <CardContent>
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Document Type</TableHead>
-              <TableHead>Document Number</TableHead>
-              <TableHead>Issue Date</TableHead>
-              <TableHead>Issue Location</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {documents.map((doc) => (
-              <TableRow key={doc.metadata.document_id}>
-                <TableCell>{doc.document_info.document_type}</TableCell>
-                <TableCell>{doc.document_info.document_number}</TableCell>
-                <TableCell>{doc.document_info.issue_date}</TableCell>
-                <TableCell>{doc.document_info.issue_location}</TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-        <div className="flex justify-between items-center mt-4">
-          <Button
-            onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-            disabled={currentPage === 1}
-          >
-            Previous
-          </Button>
-          <span>
-            Page {currentPage} of {totalPages}
-          </span>
-          <Button
-            onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
-            disabled={currentPage === totalPages}
-          >
-            Next
-          </Button>
-        </div>
+        {isLoading ? (
+          <div className="flex justify-center items-center h-24">Đang tải...</div>
+        ) : (
+          <DataTable columns={columns} data={documents} />
+        )}
       </CardContent>
     </Card>
   )

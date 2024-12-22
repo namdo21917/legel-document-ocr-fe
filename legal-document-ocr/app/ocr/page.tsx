@@ -49,21 +49,13 @@ export default function OCRPage() {
     }
   }
 
-  const handleSave = async (data: DocumentData) => {
+  const handleSave = async (documents: DocumentData[]) => {
     try {
       setIsLoading(true)
-      const savedDocument = await documentService.saveDocument(data)
-      setProcessedDocuments(prevDocs =>
-        prevDocs.map(doc =>
-          doc.metadata.document_id === savedDocument.metadata.document_id 
-            ? savedDocument 
-            : doc
-        )
-      )
-
+      const savedDocuments = await documentService.saveDocuments(documents)
+      setProcessedDocuments(savedDocuments)
     } catch (error) {
-       console.log(error);
-
+      console.error('Error saving documents:', error)
     } finally {
       setIsLoading(false)
     }
