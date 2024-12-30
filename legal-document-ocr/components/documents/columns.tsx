@@ -35,5 +35,9 @@ export const columns: ColumnDef<DocumentData>[] = [
   {
     accessorKey: "document_info.issuing_agency", 
     header: "Phòng/Ban ban hành",
+  },
+  {
+    accessorKey: "action",
+    header: "Thao tác",
   }
 ] 
