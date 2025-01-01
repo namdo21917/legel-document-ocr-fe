@@ -30,13 +30,15 @@ interface DataTableProps<TData, TValue> {
     data: TData[]
     onFilter: (value: string) => void
     isLoading: boolean
+    onRefresh: () => void
 }
 
 export function DataTable<TData, TValue>({
                                              columns,
                                              data,
                                              onFilter,
-                                             isLoading
+                                             isLoading,
+                                             onRefresh
                                          }: DataTableProps<TData, TValue>) {
     const [sorting, setSorting] = useState<SortingState>([])
     const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
@@ -55,6 +57,9 @@ export function DataTable<TData, TValue>({
             sorting,
             columnFilters,
         },
+        meta: {
+            onRefresh: onRefresh
+        }
     })
     console.log("data", data)
     return (
@@ -123,30 +128,6 @@ export function DataTable<TData, TValue>({
                 </Table>
             </div>
             <div className="flex items-center justify-end space-x-2 py-4">
-                <Pagination>
-                    <PaginationContent>
-                        <PaginationItem>
-                            <PaginationPrevious href="#"/>
-                        </PaginationItem>
-                        <PaginationItem>
-                            <PaginationLink href="#">1</PaginationLink>
-                        </PaginationItem>
-                        <PaginationItem>
-                            <PaginationLink href="#" isActive>
-                                2
-                            </PaginationLink>
-                        </PaginationItem>
-                        <PaginationItem>
-                            <PaginationLink href="#">3</PaginationLink>
-                        </PaginationItem>
-                        <PaginationItem>
-                            <PaginationEllipsis/>
-                        </PaginationItem>
-                        <PaginationItem>
-                            <PaginationNext href="#"/>
-                        </PaginationItem>
-                    </PaginationContent>
-                </Pagination>
                 <Button
                     variant="outline"
                     size="sm"

@@ -1,5 +1,5 @@
 import {httpClient} from '@/lib/http-client';
-import {DocumentData, DocumentListParams, DocumentResponse} from '@/types/document';
+import {DocumentData, DocumentListParams, DocumentResponse, DocumentDeleteResponse} from '@/types/document';
 
 export class DocumentService {
     private static instance: DocumentService;
@@ -42,6 +42,21 @@ export class DocumentService {
             documents: documents
         });
         return this.mapDocumentResponse(response);
+    }
+
+    public async getDocument(documentId: string): Promise<DocumentData> {
+        const response = await httpClient.get<DocumentData>(`/documents/${documentId}`);
+        return response;
+    }
+
+    public async updateDocument(documentId: string, data: DocumentData): Promise<DocumentData> {
+        const response = await httpClient.put<DocumentData>(`/documents/${documentId}`, data);
+        return response;
+    }
+
+    public async deleteDocument(documentId: string): Promise<DocumentDeleteResponse> {
+        const response = await httpClient.delete<DocumentDeleteResponse>(`/documents/${documentId}/delete`);
+        return response;
     }
 
     private mapDocumentResponse(response: DocumentResponse): DocumentData[] {

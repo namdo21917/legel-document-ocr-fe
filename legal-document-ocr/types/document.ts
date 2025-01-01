@@ -34,3 +34,9 @@ export interface DocumentResponse {
     documents: DocumentData[];
 }
 
+export interface DocumentDeleteResponse{
+    isSuccess: boolean;
+    message: string;
+    document_id: string;
+}
+
