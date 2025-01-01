@@ -15,6 +15,16 @@ import { documentService } from "@/services/document-service"
 import { DocumentSheet } from "./document-sheet"
 import { DocumentEditSheet } from "./document-edit-sheet"
 import {useToast} from "@/hooks/use-toast";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog"
 
 interface ActionsProps {
   document: DocumentData;
@@ -24,6 +34,7 @@ interface ActionsProps {
 const Actions = ({ document, onRefresh }: ActionsProps) => {
   const [openViewSheet, setOpenViewSheet] = useState(false)
   const [openEditSheet, setOpenEditSheet] = useState(false)
+  const [openDeleteAlert, setOpenDeleteAlert] = useState(false)
   const [selectedDocument, setSelectedDocument] = useState<DocumentData | null>(null)
   const [isLoading, setIsLoading] = useState(false)
   const { toast } = useToast()
@@ -82,6 +93,34 @@ const Actions = ({ document, onRefresh }: ActionsProps) => {
     }
   }
 
+  const handleDelete = async (documentId: string) => {
+    try {
+      setIsLoading(true)
+      const result = await documentService.deleteDocument(documentId)
+      if (result.isSuccess) {
+        toast({
+          title: "Thành công",
+          description: "Xóa văn bản thành công"
+        })
+        if (onRefresh) {
+          onRefresh()
+        }
+      } else {
+        throw new Error(result.message)
+      }
+    } catch (error) {
+      console.error('Error deleting document:', error)
+      toast({
+        variant: "destructive",
+        title: "Lỗi",
+        description: "Không thể xóa văn bản"
+      })
+    } finally {
+      setIsLoading(false)
+      setOpenDeleteAlert(false)
+    }
+  }
+
   return (
     <>
       <div className="flex items-center gap-2">
@@ -121,7 +160,8 @@ const Actions = ({ document, onRefresh }: ActionsProps) => {
               <Button
                 variant="ghost"
                 size="icon"
-                // onClick={() => onDelete(document.metadata.document_id)}
+                onClick={() => setOpenDeleteAlert(true)}
+                disabled={isLoading}
               >
                 <Trash2 className="h-4 w-4 text-red-500" />
               </Button>
@@ -144,6 +184,27 @@ const Actions = ({ document, onRefresh }: ActionsProps) => {
         onSave={handleSave}
         isLoading={isLoading}
       />
+
+      <AlertDialog open={openDeleteAlert} onOpenChange={setOpenDeleteAlert}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Bạn có chắc chắn muốn xóa?</AlertDialogTitle>
+            <AlertDialogDescription>
+              Hành động này không thể hoàn tác. Văn bản sẽ bị xóa vĩnh viễn khỏi hệ thống.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={isLoading}>Hủy</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={() => handleDelete(document.metadata.document_id)}
+              disabled={isLoading}
+              className="bg-red-500 hover:bg-red-600"
+            >
+              {isLoading ? "Đang xóa..." : "Xóa"}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </>
   )
 }
