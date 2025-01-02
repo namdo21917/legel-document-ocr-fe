@@ -1,22 +1,18 @@
 'use client'
 
-import {useEffect, useState} from 'react'
+import {useEffect, useState, useCallback} from 'react'
 import type {DocumentData} from "@/types/document"
 import {documentService} from "@/services/document-service"
 import {columns} from "./documents/columns"
 import {DataTable} from "./documents/data-table"
-import {useToast} from "@/hooks/use-toast";
+import {useToast} from "@/hooks/use-toast"
 
 export function DocumentList() {
     const [documents, setDocuments] = useState<DocumentData[]>([])
     const [isLoading, setIsLoading] = useState(false)
     const { toast } = useToast()
 
-    useEffect(() => {
-        fetchDocuments()
-    }, [fetchDocuments])
-
-    const fetchDocuments = async (value?: string) => {
+    const fetchDocuments = useCallback(async (value?: string) => {
         try {
             setIsLoading(true)
             const response = await documentService.getDocuments({
@@ -35,7 +31,11 @@ export function DocumentList() {
         } finally {
             setIsLoading(false)
         }
-    }
+    }, [toast])
+
+    useEffect(() => {
+        fetchDocuments()
+    }, [fetchDocuments])
 
     const handleRefresh = () => {
         fetchDocuments()
