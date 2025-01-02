@@ -64,7 +64,7 @@ export function DocumentViewer({onFileUpload}: DocumentViewerProps) {
         } else {
             return (
                 <div className="flex h-full items-center justify-center">
-                    <p className="text-muted-foreground">Preview not available for this file type</p>
+                    <p className="text-muted-foreground">Xem trước không khả dụng cho loại file này</p>
                 </div>
             )
         }

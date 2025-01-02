@@ -14,7 +14,7 @@ export function DocumentList() {
 
     useEffect(() => {
         fetchDocuments()
-    }, [])
+    }, [fetchDocuments])
 
     const fetchDocuments = async (value?: string) => {
         try {

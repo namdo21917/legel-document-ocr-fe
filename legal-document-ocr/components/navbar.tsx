@@ -9,7 +9,7 @@ export function Navbar() {
         </Link>
         <div className="ml-6 flex gap-4">
           <Link href="/ocr">OCR</Link>
-          <Link href="/documents">Documents</Link>
+          <Link href="/documents">Danh sách văn bản</Link>
         </div>
       </div>
     </nav>

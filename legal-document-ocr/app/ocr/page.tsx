@@ -5,6 +5,7 @@ import { DocumentViewer } from "@/components/document-viewer"
 import { OCREditor } from "@/components/ocr-editor"
 import { documentService } from "@/services/document-service"
 import type { DocumentData } from "@/types/document"
+import {toast, useToast} from "@/hooks/use-toast";
 
 const defaultDocumentData: DocumentData = {
   metadata: {
@@ -32,6 +33,7 @@ export default function OCRPage() {
   const [documentData, setDocumentData] = useState<DocumentData>(defaultDocumentData)
   const [processedDocuments, setProcessedDocuments] = useState<DocumentData[]>([])
   const [isLoading, setIsLoading] = useState(false)
+  const { toast } = useToast()
 
   const handleFileUpload = async (file: File) => {
     try {
@@ -56,6 +58,11 @@ export default function OCRPage() {
       setProcessedDocuments(savedDocuments)
     } catch (error) {
       console.error('Error saving documents:', error)
+      toast({
+        variant: "destructive",
+        title: "Lỗi",
+        description: "Không thể lưu văn bản"
+      })
     } finally {
       setIsLoading(false)
     }
