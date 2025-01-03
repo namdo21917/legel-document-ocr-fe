@@ -86,7 +86,7 @@ export function DocumentViewer({onFileUpload}: DocumentViewerProps) {
                                 className="hidden"
                             />
                             <Upload className="mr-2 h-4 w-4"/>
-                            Choose file
+                            Chọn tệp
                         </label>
                     </Button>
                     &nbsp;

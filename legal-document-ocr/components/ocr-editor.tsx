@@ -63,7 +63,7 @@ export function OCREditor({
     return (
         <Card className="h-full flex flex-col">
             <div className="p-4 border-b">
-                <h3 className="text-lg font-semibold mb-2">Processed Documents</h3>
+                <h3 className="text-lg font-semibold mb-2">Tài liệu đã xử lý</h3>
                 <div className="overflow-auto">
                     <Table>
                         <TableHeader>
@@ -239,7 +239,7 @@ export function OCREditor({
                     onClick={handleSaveAll}
                     disabled={isLoading}
                 >
-                    {isLoading ? 'Saving...' : 'Save All Documents'}
+                    {isLoading ? 'Đang lưu...' : 'Lưu toàn bộ văn bản'}
                 </Button>
             </div>
         </Card>
