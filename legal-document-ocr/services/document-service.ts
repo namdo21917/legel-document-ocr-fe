@@ -18,6 +18,8 @@ export class DocumentService {
         const formData = new FormData();
         formData.append('file', file);
 
+        console.log('Uploading to endpoint: /documents/');
+
         const response = await httpClient.post<DocumentResponse>('/documents/', formData, {
             headers: {
                 'Content-Type': 'multipart/form-data',

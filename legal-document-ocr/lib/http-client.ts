@@ -11,8 +11,12 @@ export class HttpClient {
   private client: AxiosInstance;
 
   constructor() {
+    // Debug: In ra để kiểm tra URL
+    const baseURL = `${API_CONFIG.baseURL}/api/${API_CONFIG.version}`;
+
+
     this.client = axios.create({
-      baseURL: `${API_CONFIG.baseURL}/api/${API_CONFIG.version}`,
+      baseURL: baseURL,
       headers: {
         'Content-Type': 'application/json',
       },
